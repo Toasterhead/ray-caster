@@ -26,31 +26,39 @@ function cast_rays(observer)
 				if not hitStack:stack_peek() then hitStack:pop() end
 			end
 			
-			local shortestDistance=nil
+			local distance=nil
 			local selected=nil
 			
 			while hitStack:count()>0 do
 				local hit=hitStack:pop()
-				local currentDistance=distance(observer.Position.x,observer.Position.y,hit.intersection.x,hit.intersection.y)
-				if not shortestDistance or currentDistance<shortestDistance then
-					shortestDistance=currentDistance
+				local currentDistance=get_distance(observer.Position.x,observer.Position.y,hit.intersection.x,hit.intersection.y)
+				if not distance or currentDistance<distance then
+					distance=currentDistance
 					selected={id=hit.id,intersection=hit.intersection,vertical=hit.vertical}
 				end
 			end
 			
 			if selected then
 				local sourceColumn
+				local positionRatio
+				local darkness=0
+				local darknessThreshold=0.1*(DRAW_DISTANCE*CELL_SIZE)
 				local transparent=0
-				local darkness=shortestDistance/(DRAW_DISTANCE*TILE_SIZE)
+				if distance>darknessThreshold then
+					darkness=(distance-darknessThreshold)/((DRAW_DISTANCE*CELL_SIZE)-darknessThreshold)
+					trace(darkness,7)
+				end
+				local height=viewport.height/(SCALE_RATE*distance)
 				cell={x=math.floor(selected.intersection.x),y=math.floor(selected.intersection.y)}
 				cell={x=cell.x-(cell.x%2),y=cell.y-(cell.y%2)}
 				if fget(selected.id,FLAG_TRANSPARENT)==true then transparent=0 end --Modify later. Consider a lookup table. (key: id, value: transparent)
 				if selected.vertical==true then
-					sourceColumn=math.floor((selected.intersection.y-cell.y)/CELL_SIZE)*(textureSettings.sourceHeight*TILE_SIZE)
+					positionRatio=(selected.intersection.y-cell.y)/CELL_SIZE
 				else
-					sourceColumn=math.floor((selected.intersection.y-cell.x)/CELL_SIZE)*(textureSettings.sourceWidth*TILE_SIZE)
+					positionRatio=1-((selected.intersection.x-cell.x)/CELL_SIZE)
 				end
-				renderables[#renderables+1]=PixelColumn:new(selected.id,sourceColumn,textureSettings.sourceHeight,i-1,shortestDistance,1,darkness,nil,4)
+				sourceColumn=math.floor(positionRatio*(textureSettings.sourceWidth*TILE_SIZE))
+				renderables[#renderables+1]=PixelColumn:new(selected.id,sourceColumn,textureSettings.sourceHeight,i-1,distance,height,1,darkness,nil,4)
 				break
 			end
 		  
@@ -70,7 +78,7 @@ function cell_has_vertical(x,y,rayCurrent,rayNext)
 		if intersection then
 			if not intersection.y then intersection.y=y end
 			local id=mget(x,y)
-			if rayCurrent.x>=rayNext.x then id=mget(x,y+1) end
+			if rayCurrent.x>=rayNext.x then id=mget(x%2,y+1) end
 			return {id=id,intersection=intersection,vertical=true}
 		end
 	end

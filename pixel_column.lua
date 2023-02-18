@@ -2,8 +2,7 @@
 
 PixelColumn={}
 PixelColumn.__index=PixelColumn
-function PixelColumn:new(id,sourceColumn,sourceHeight,horizontalOffset,distance,transparent,darkness,background,bits)
-	local height=distance --Modify later.
+function PixelColumn:new(id,sourceColumn,sourceHeight,horizontalOffset,distance,height,transparent,darkness,background,bits)
 	return setmetatable(
 		{
 			Id=id,

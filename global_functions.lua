@@ -22,12 +22,14 @@ function coterminal(theta)
  	return theta
 end
 
-function distance(x,y,a,b) return math.sqrt((a-x)^2+(b-y)^2) end
+function get_distance(x,y,a,b) return math.sqrt((a-x)^2+(b-y)^2) end
 
-function vector_from(theta,magnitude)
-  v=Vector:new(math.cos(theta),math.sin(theta))
-  if magnitude then v=v:scale(magnitude) end
-  return v
+function dot_product(v1,v2)
+	return (v1.x*v2.x)+(v1.y+v2.y)
+end
+
+function corrected_distance(observer,rayVector,distance)
+	return dot_product(vector_from(observer.Direction),rayVector:normalize():scale(distance))
 end
 
 function quadrant_from(vector)

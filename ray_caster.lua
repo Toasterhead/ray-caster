@@ -1,6 +1,6 @@
 -- title:   Ray Caster
 -- author:  Lenny Young
--- desc:    A ray-casting engine for createing a texture-mapped, first-person view from a 2D map.
+-- desc:    A ray-casting engine for rendering a texture-mapped, first-person view from a 2D map.
 -- site:    website link
 -- license: MIT License (change this to your license of choice)
 -- version: 0.1

@@ -1,8 +1,9 @@
-viewport={x=8,y=8,width=160,height=136}
+viewport={x=8,y=0,width=160,height=136}
 bgSettings={id=64,sourceWidth=8,sourceHeight=2,verticalPosition=20,height=50,bits=4}
 textureSettings={sourceWidth=2,sourceHeight=2}
 
-DRAW_DISTANCE=50
+DRAW_DISTANCE=15
+SCALE_RATE=1
 FULL_ROTATION=2*math.pi
 CELL_SIZE=2
 
