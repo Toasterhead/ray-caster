@@ -1,4 +1,5 @@
 function draw_overhead()
+	clip()
 	cls(8)
 	for i=0,136-1 do
 		for j=0,240-1 do
@@ -15,7 +16,7 @@ function draw_overhead()
 		end
 	end
 	rayVectors=observer:get_ray_vectors()
-	selectedRays={1,#rayVectors//2,#rayVectors}
+	selectedRays={1,#rayVectors//4,#rayVectors//2,#rayVectors,3*#rayVectors//4}
 	for i=1,#selectedRays do
 		local x1=observer.Position.x
 		local y1=observer.Position.y

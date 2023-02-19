@@ -42,11 +42,10 @@ function cast_rays(observer)
 				local sourceColumn
 				local positionRatio
 				local darkness=0
-				local darknessThreshold=0.1*(DRAW_DISTANCE*CELL_SIZE)
-				local transparent=0
+				local darknessThreshold=0*(DRAW_DISTANCE*CELL_SIZE)
+				local transparent=nil
 				if distance>darknessThreshold then
 					darkness=(distance-darknessThreshold)/((DRAW_DISTANCE*CELL_SIZE)-darknessThreshold)
-					trace(darkness,7)
 				end
 				local height=viewport.height/(SCALE_RATE*distance)
 				cell={x=math.floor(selected.intersection.x),y=math.floor(selected.intersection.y)}
@@ -58,7 +57,17 @@ function cast_rays(observer)
 					positionRatio=1-((selected.intersection.x-cell.x)/CELL_SIZE)
 				end
 				sourceColumn=math.floor(positionRatio*(textureSettings.sourceWidth*TILE_SIZE))
-				renderables[#renderables+1]=PixelColumn:new(selected.id,sourceColumn,textureSettings.sourceHeight,i-1,distance,height,1,darkness,nil,4)
+				renderables[#renderables+1]=PixelColumn:new(
+					selected.id,
+					sourceColumn,
+					textureSettings.sourceHeight,
+					i-1,
+					distance,
+					height,
+					nil,
+					darkness,
+					nil,
+					bitDepths.texture)
 				break
 			end
 		  
@@ -78,7 +87,8 @@ function cell_has_vertical(x,y,rayCurrent,rayNext)
 		if intersection then
 			if not intersection.y then intersection.y=y end
 			local id=mget(x,y)
-			if rayCurrent.x>=rayNext.x then id=mget(x%2,y+1) end
+			if rayCurrent.x>=rayNext.x then id=mget(x,y+1) end
+			id=id*(MAX_COLOR_DEPTH//bitDepths.texture)
 			return {id=id,intersection=intersection,vertical=true}
 		end
 	end
@@ -93,6 +103,7 @@ function cell_has_horizontal(x,y,rayCurrent,rayNext)
 			if not intersection.x then intersection.x=x end
 			local id=mget(x+1,y)
 			if rayCurrent.y>=rayNext.y then id=mget(x+1,y+1) end
+			id=id*(MAX_COLOR_DEPTH//bitDepths.texture)
 			return {id=id,intersection=intersection,vertical=false}
 		end
 	end

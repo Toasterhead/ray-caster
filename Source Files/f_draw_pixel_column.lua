@@ -37,11 +37,11 @@ function draw_pixel_column(pixelColumn,dither_filter,dark)
 			local addr=start+pixelIndex
 			local color=peek(addr,bits)
 			
-			if color~=transparent then
+			if not transparent or color~=transparent then
 				if dither_filter and dither_filter(x,y+i,pixelColumn.Darkness)==true then
 					pix(x,y+i,dark)
 				else pix(x,y+i,color) end
-			elseif background and y+i>=y+bgSettings.verticalPosition and y+i<bgSettings.verticalPosition+bgSettings.height then
+			elseif background and y+i>=viewport.y+bgSettings.verticalPosition and y+i<viewport.y+bgSettings.verticalPosition+bgSettings.height then
 				local bgSourceWidth=bgSettings.sourceWidth*TILE_SIZE
 				local bgSourceHeight=bgSettings.sourceHeight*TILE_SIZE
 				color=color_from(

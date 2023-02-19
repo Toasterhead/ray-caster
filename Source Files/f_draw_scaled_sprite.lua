@@ -19,7 +19,7 @@ function draw_scaled_sprite(scalableSprite,dither_filter,dark)
 			local sourceY=math.floor((i/height)*sourceHeight)
 			local color=color_from(sourceX,sourceY,scalableSprite.Id,scalableSprite.Bits)
 			
-			if color~=transparent then
+			if not transparent or color~=transparent then
 				if dither_filter and dither_filter(x+j,y+i,scalableSprite.Darkness)==true then
 					pix(x+j,y+i,dark)
 				else
