@@ -24,6 +24,34 @@ function cast_rays(observer)
 				if not hitStack:stack_peek() then hitStack:pop() end
 				hitStack:push(cell_has_horizontal(cell.x+CELL_SIZE,cell.y+CELL_SIZE,rayPosition,rayNext))
 				if not hitStack:stack_peek() then hitStack:pop() end
+			elseif q==QII then
+				hitStack:push(cell_has_vertical(cell.x,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_vertical(cell.x-CELL_SIZE,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_horizontal(cell.x,cell.y+CELL_SIZE,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_vertical(cell.x,cell.y+CELL_SIZE,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_horizontal(cell.x-CELL_SIZE,cell.y+CELL_SIZE,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				--hitStack:push(cell_has_vertical(cell.x-CELL_SIZE,cell.y+CELL_SIZE,rayPosition,rayNext))
+				--if not hitStack:stack_peek() then hitStack:pop() end
+			elseif q==QIII then
+				hitStack:push(cell_has_horizontal(cell.x,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_vertical(cell.x,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_horizontal(cell.x-CELL_SIZE,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_vertical(cell.x-CELL_SIZE,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_vertical(cell.x,cell.y-CELL_SIZE,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_horizontal(cell.x,cell.y-CELL_SIZE,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+			elseif q==QIV then
+				
 			end
 			
 			local distance=nil
@@ -42,12 +70,13 @@ function cast_rays(observer)
 				local sourceColumn
 				local positionRatio
 				local darkness=0
-				local darknessThreshold=0*(DRAW_DISTANCE*CELL_SIZE)
+				local darknessThreshold=0.15*(DRAW_DISTANCE*CELL_SIZE)
 				local transparent=nil
 				if distance>darknessThreshold then
 					darkness=(distance-darknessThreshold)/((DRAW_DISTANCE*CELL_SIZE)-darknessThreshold)
 				end
-				local height=viewport.height/(SCALE_RATE*distance)
+				local height=math.floor((SCALE_RATE*viewport.height)/distance)
+				if height%2==1 then height=height+1 end
 				cell={x=math.floor(selected.intersection.x),y=math.floor(selected.intersection.y)}
 				cell={x=cell.x-(cell.x%2),y=cell.y-(cell.y%2)}
 				if fget(selected.id,FLAG_TRANSPARENT)==true then transparent=0 end --Modify later. Consider a lookup table. (key: id, value: transparent)
