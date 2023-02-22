@@ -20,19 +20,28 @@ This project aims to create a rendering engine in the style of early "Pre-*Doom*
 
 ### Current Progress
 
-The engine is able to render walls in quadrant I (observer facing 0 - 90 degrees) with textures and dithering. Some subtle fish-eye warping occurs. Textures appear increasingly jittery near the bottom, possibly due to rounding error. All three color depths are working.
+The engine is able to render walls in with textures and dithering. Some subtle fish-eye warping occurs. All three color depths are working.
 
 Some screenshots can be seen below. A more nitty-gritty description of the engine follows.
 
-![alt text](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20First%20Person%20Dithering.PNG?raw=true)
+### Images
 
-![alt text](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20First%20Person%20View.PNG?raw=true)
+<details>
 
-![alt text](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20Overhead%20View.PNG?raw=true)
+![Ray Caster - First Person View](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20First%20Person%20View.PNG?raw=true)
 
-![alt text](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20Test%20Textures.PNG?raw=true)
+![Ray Caster - Overhead View](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20Overhead%20View%203.PNG?raw=true)
+
+![Ray Caster - First Person Dithering](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20First%20Person%20Dithering.PNG?raw=true)
+
+![Ray Caster - Overhead Dithering](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20Overhead%20Dithering.PNG?raw=true)
+
+![Ray Caster - Test Textures](https://github.com/Toasterhead/ray-caster/blob/master/Screen%20Captures/Ray%20Caster%20-%20Test%20Textures.PNG?raw=true)
+</details>
 
 ### Technique
+
+<details>
 
 This section broadly explains how the final engine should hypothetically operate, and may be revised as development progresses.
 
@@ -63,3 +72,4 @@ The TIC-80 has no inherent capability for drawing arbitrarily scaled images, but
 RAM for storing images on the cartridge is [limited](https://github.com/nesbox/TIC-80/wiki/RAM), but more images can be stored with a reduced color bit depth. For example, if an address stores the 4-bit value 0111 (7 in decimal) then the color value at index 7 will be used for that pixel (from a palette of 16 possible colors). However, if it's divided into a pair of 2-bit values, 01 and 11, it can now represent two pixels with color indices 1 and 3 (with the palette reduced to 4 possible colors).
 
 A 4-color palette is pretty restrictive, but the entire screen needn't be rendered in 2-bit color. When the 2-bit image is drawn, an ordered list of 4 integers can be provided as a parameter, re-mapping the 4 possible colors to any of the 16 colors available in the grand palette. A similar technique can also be applied to 1-bit color.
+</details>
