@@ -4,12 +4,23 @@ Observer={}
 Observer.__index=Observer
 function Observer:new(x,y,direction,span)
   
-  --Experiment with uneven angle distribution later.
   local span=span or FULL_ROTATION/6
   span=coterminal(span)
-  local interval=span/viewport.width
   local rayAngles={}
-  for i=1,viewport.width do rayAngles[i]=(-span/2)+((i-1)*interval)+(interval/i) end
+  local cameraPlaneWidth=2*CELL_SIZE*math.tan(span/2)
+  local cameraPlaneInterval=cameraPlaneWidth/viewport.width
+  local initialPosition=-cameraPlaneWidth/2
+  
+  for i=1,viewport.width//2 do
+  	local currentPosition=initialPosition+((i-1)*cameraPlaneInterval)
+  	rayAngles[i]=math.atan2(currentPosition/CELL_SIZE)
+  end
+  
+  if viewport.width%2==1 then rayAngles[#rayAngles+1]=0 end
+  
+  for i=viewport.width//2,1,-1 do
+  	rayAngles[#rayAngles+1]=-rayAngles[i]
+  end
   
   return setmetatable(
     {

@@ -51,7 +51,18 @@ function cast_rays(observer)
 				hitStack:push(cell_has_horizontal(cell.x,cell.y-CELL_SIZE,rayPosition,rayNext))
 				if not hitStack:stack_peek() then hitStack:pop() end
 			elseif q==QIV then
-				
+				hitStack:push(cell_has_horizontal(cell.x,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_horizontal(cell.x,cell.y-CELL_SIZE,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_horizontal(cell.x+CELL_SIZE,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_vertical(cell.x+CELL_SIZE,cell.y,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				hitStack:push(cell_has_vertical(cell.x+CELL_SIZE,cell.y-CELL_SIZE,rayPosition,rayNext))
+				if not hitStack:stack_peek() then hitStack:pop() end
+				--hitStack:push(cell_has_horizontal(cell.x+CELL_SIZE,cell.y-CELL_SIZE,rayPosition,rayNext))
+				--if not hitStack:stack_peek() then hitStack:pop() end
 			end
 			
 			local distance=nil
@@ -107,34 +118,4 @@ function cast_rays(observer)
 	
 	return renderables
 	
-end
-
-function cell_has_vertical(x,y,rayCurrent,rayNext)
-	if mget(x,y)~=0 or mget(x,y+1)~=0 then
-		linearCurve=LinearCurve:new(rayCurrent.x,rayCurrent.y,rayNext.x,rayNext.y)
-		intersection=linearCurve:intersects_vertical_segment(x,y,y+2)
-		if intersection then
-			if not intersection.y then intersection.y=y end
-			local id=mget(x,y)
-			if rayCurrent.x>=rayNext.x then id=mget(x,y+1) end
-			id=id*(MAX_COLOR_DEPTH//bitDepths.texture)
-			return {id=id,intersection=intersection,vertical=true}
-		end
-	end
-	return nil
-end
-
-function cell_has_horizontal(x,y,rayCurrent,rayNext)
-	if mget(x+1,y)~=0 or mget(x+1,y+1)~=0 then
-		linearCurve=LinearCurve:new(rayCurrent.x,rayCurrent.y,rayNext.x,rayNext.y)
-		intersection=linearCurve:intersects_horizontal_segment(x,x+2,y)
-		if intersection then
-			if not intersection.x then intersection.x=x end
-			local id=mget(x+1,y)
-			if rayCurrent.y>=rayNext.y then id=mget(x+1,y+1) end
-			id=id*(MAX_COLOR_DEPTH//bitDepths.texture)
-			return {id=id,intersection=intersection,vertical=false}
-		end
-	end
-	return nil
 end
