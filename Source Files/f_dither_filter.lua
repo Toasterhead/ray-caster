@@ -19,6 +19,8 @@ function dither_filter(x,y,darkness)
 		return (x%4==0 and y%4==0) or (x%4==2 and y%4==2)
 	elseif darkness>=0.125 then
 		return (x%6==0 and y%8==0) or (x%6==3 and y%8==4)
+	elseif darkness>0 then
+		return (x%12==0 and y%16==0) or (x%12==6 and y%16==8)
 	end
 	
 	return false

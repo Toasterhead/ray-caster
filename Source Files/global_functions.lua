@@ -24,6 +24,18 @@ end
 
 function get_distance(x,y,a,b) return math.sqrt((a-x)^2+(b-y)^2) end
 
+function compare_distance(a,b)
+	if a.distance and b.distance then
+		if reverseSort==true then
+			return a.distance>b.distance
+		else return a.distance<b.distance end
+	elseif a.Distance and b.Distance then
+		if reverseSort==true then
+		 return a.Distance>b.Distance
+		else return a.Distance<b.Distance end
+	end
+end
+
 function dot_product(v1,v2)
 	return (v1.x*v2.x)+(v1.y+v2.y)
 end
@@ -37,4 +49,30 @@ function quadrant_from(vector)
   elseif vector.x<0 and vector.y>=0 then return QII
   elseif vector.x<0 and vector.y<0 then return QIII
   else return QIV end
+end
+
+function get_lookup(id,flagIndex)
+	local lookup=lookupColorMap
+	if flagIndex==FLAG_TRANSPARENT then lookup=lookupTransparent
+	else end
+	for i=1,#lookup do
+		if lookup[i].id==id then return lookup[i].term end
+	end
+end
+
+function light_at(x,y,lightSources)
+	local total=0
+	for i=1,#lightSources do
+		local ls=lightSources[i]
+		if ls.H and x>=ls.X and x<ls.X+ls.W and y>=ls.Y and y<ls.Y+ls.H then
+			local adjustment=0
+			if ls.Range and ls.Period then adjustment=((t%ls.Period)/ls.Period)*ls.Range end
+			total=total+ls.Level+adjustment
+		elseif x>=ls.X-ls.W and x<ls.X+ls.W and y>=ls.Y-ls.W and y<ls.W then
+			local adjustment=0
+			if ls.Range and ls.Period then adjustment=((t%ls.Period)/ls.Period)*ls.Range end
+			--
+		end
+	end
+	return total
 end

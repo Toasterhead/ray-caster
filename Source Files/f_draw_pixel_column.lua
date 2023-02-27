@@ -6,8 +6,9 @@ function draw_pixel_column(pixelColumn,dither_filter,dark)
 	local sourceHeight=TILE_SIZE*pixelColumn.SourceHeight
 	local height=pixelColumn.Height
 	local horizontalOffset=pixelColumn.HorizontalOffset
-	local verticalOffset=(0.5*viewport.height)-(0.5*pixelColumn.Height)
+	local verticalOffset=((0.5*viewport.height)-(0.5*pixelColumn.Height))+pixelColumn.BobOffset
 	local background=pixelColumn.Background
+	local colorMap=pixelColumn.ColorMap
 	local interval=sourceHeight/height
 	local dark=dark or 0
 	
@@ -36,6 +37,8 @@ function draw_pixel_column(pixelColumn,dither_filter,dark)
 			local pixelIndex=(tileRowIndex*tilesPerRow*PIXELS_PER_TILE)+(bitScale*verticalIndex*TILE_SIZE)+sourceColumn
 			local addr=start+pixelIndex
 			local color=peek(addr,bits)
+			
+			if colorMap and color<#colorMap then color=colorMap[color+1] end
 			
 			if not transparent or color~=transparent then
 				if dither_filter and dither_filter(x,y+i,pixelColumn.Darkness)==true then
