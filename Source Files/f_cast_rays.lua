@@ -10,7 +10,7 @@ function cast_rays(observer)
 		local q=quadrant_from(rayVectors[i])
 		local rayPosition=Vector:new(observer.Position.x,observer.Position.y)
 		
-		for j=0,castDistance-1 do
+		for j=0,DRAW_DISTANCE-1 do
 			
 			local rayNext=rayPosition:add(rayVectors[i])			
 			local cell={x=rayPosition.x,y=rayPosition.y}
@@ -95,11 +95,13 @@ function cast_rays(observer)
 				local darknessThreshold=0.4*(castDistance*CELL_SIZE)
 				local background=nil
 				local colorMap=get_lookup(selected[k].id)
-				local height=math.floor((SCALE_RATE*viewport.height)/selected[k].distance)
+				local height=math.floor((SCALE_RATE*viewport.height)/corrected_distance(observer,rayVectors[i],selected[k].distance))
 				
 				if selected[k].distance>darknessThreshold then
 					darkness=(selected[k].distance-darknessThreshold)/((castDistance*CELL_SIZE)-darknessThreshold)
 				end
+				darkness=darkness*(1-light_at(selected[k].intersection.x,selected[k].intersection.y,lightSources))
+				if darkness<0then darkness=0 end
 				
 				if height%2==1 then height=height+1 end
 				

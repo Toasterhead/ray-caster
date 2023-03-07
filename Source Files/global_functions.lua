@@ -37,7 +37,7 @@ function compare_distance(a,b)
 end
 
 function dot_product(v1,v2)
-	return (v1.x*v2.x)+(v1.y+v2.y)
+	return (v1.x*v2.x)+(v1.y*v2.y)
 end
 
 function corrected_distance(observer,rayVector,distance)
@@ -65,14 +65,22 @@ function light_at(x,y,lightSources)
 	for i=1,#lightSources do
 		local ls=lightSources[i]
 		if ls.H and x>=ls.X and x<ls.X+ls.W and y>=ls.Y and y<ls.Y+ls.H then
-			local adjustment=0
-			if ls.Range and ls.Period then adjustment=((t%ls.Period)/ls.Period)*ls.Range end
-			total=total+ls.Level+adjustment
-		elseif x>=ls.X-ls.W and x<ls.X+ls.W and y>=ls.Y-ls.W and y<ls.W then
-			local adjustment=0
-			if ls.Range and ls.Period then adjustment=((t%ls.Period)/ls.Period)*ls.Range end
-			--
+			total=total+ls.Level+light_adjustment(ls)
+		elseif not ls.H and x>=ls.X-ls.W and x<ls.X+ls.W and y>=ls.Y-ls.W and y<ls.Y+ls.W then
+			local intensity=1-(get_distance(x,y,ls.X,ls.Y)/ls.W)
+			if intensity>0 then total=total+(intensity*ls.Level)+light_adjustment(ls) end
 		end
 	end
 	return total
+end
+
+function light_adjustment(ls)
+	if ls.Range and ls.Period then
+		local tElapsed=t%ls.Period
+		local halfPeriod=0.5*ls.Period
+		if tElapsed<halfPeriod then
+			return (tElapsed/halfPeriod)*ls.Range
+		else return ((ls.Period-tElapsed)/halfPeriod)*ls.Range end
+	end
+	return 0
 end
